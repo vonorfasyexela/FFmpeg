@@ -212,6 +212,7 @@
  * After adding new codec IDs, do not forget to add an entry to the codec
  * descriptor list and bump libavcodec minor version.
  */
+//// перечисление всех возможных идентификаторов битовых потоков
 enum AVCodecID {
     AV_CODEC_ID_NONE,
 
@@ -3485,13 +3486,17 @@ typedef struct AVCodec {
      * encoder and a decoder can share the same name).
      * This is the primary way to find a codec from the user perspective.
      */
+    //// указатель на константный строковый литерал, используется для сохранения имени кодека
     const char *name;
     /**
      * Descriptive name for the codec, meant to be more human readable than name.
      * You should use the NULL_IF_CONFIG_SMALL() macro to define it.
      */
+    //// указатель на константный строковый литерал, используется для хранения расширенного имени кодека
     const char *long_name;
+    //// тип медиа, который понимает этот кодек
     enum AVMediaType type;
+    //// идентификатор битового потока
     enum AVCodecID id;
     /**
      * Codec capabilities.
@@ -3499,6 +3504,7 @@ typedef struct AVCodec {
      */
     int capabilities;
     const AVRational *supported_framerates; ///< array of supported framerates, or NULL if any, array is terminated by {0,0}
+    //// массив поддерживаемых этим кодеком форматов пикселей 
     const enum AVPixelFormat *pix_fmts;     ///< array of supported pixel formats, or NULL if unknown, array is terminated by -1
     const int *supported_samplerates;       ///< array of supported audio samplerates, or NULL if unknown, array is terminated by 0
     const enum AVSampleFormat *sample_fmts; ///< array of supported sample formats, or NULL if unknown, array is terminated by -1
@@ -3561,6 +3567,7 @@ typedef struct AVCodec {
      */
     void (*init_static_data)(struct AVCodec *codec);
 
+    //// указатель на функцию инициализации кодека, принимающую на вход указатель на контекст кодека
     int (*init)(AVCodecContext *);
     int (*encode_sub)(AVCodecContext *, uint8_t *buf, int buf_size,
                       const struct AVSubtitle *sub);
@@ -3574,9 +3581,12 @@ typedef struct AVCodec {
      *                            non-empty packet was returned in avpkt.
      * @return 0 on success, negative error code on failure
      */
+    //// указатель на функцию кодирования кадра в пакет
     int (*encode2)(AVCodecContext *avctx, AVPacket *avpkt, const AVFrame *frame,
                    int *got_packet_ptr);
+    //// указатель на функцию декодирования пакета                   
     int (*decode)(AVCodecContext *, void *outdata, int *outdata_size, AVPacket *avpkt);
+    //// указатель на функцию деинициализации кодека, принимающую на вход указатель на контекст кодека
     int (*close)(AVCodecContext *);
     /**
      * Encode API with decoupled packet/frame dataflow. The API is the

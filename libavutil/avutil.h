@@ -195,7 +195,7 @@ const char *avutil_license(void);
  * @addtogroup lavu_media Media Type
  * @brief Media Type
  */
-
+//// перечисление типов медиа, поддерживаемые ffmpeg
 enum AVMediaType {
     AVMEDIA_TYPE_UNKNOWN = -1,  ///< Usually treated as AVMEDIA_TYPE_DATA
     AVMEDIA_TYPE_VIDEO,
