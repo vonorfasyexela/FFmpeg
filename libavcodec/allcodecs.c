@@ -177,6 +177,10 @@ extern AVCodec ff_lscr_decoder;
 extern AVCodec ff_m101_decoder;
 extern AVCodec ff_magicyuv_encoder;
 extern AVCodec ff_magicyuv_decoder;
+
+// add mainconcept codec here
+extern AVCodec ff_mainconcept_encoder;
+
 extern AVCodec ff_mdec_decoder;
 extern AVCodec ff_mimic_decoder;
 extern AVCodec ff_mjpeg_encoder;
