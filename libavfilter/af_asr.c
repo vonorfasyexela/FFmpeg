@@ -68,6 +68,12 @@ static int filter_frame(AVFilterLink *inlink, AVFrame *in)
     int have_speech;
     const char *speech;
 
+//    int8_t check_data[4096];
+//    for (int i = 0; i < 10; i++)
+//    {
+//        av_log(NULL, AV_LOG_WARNING, "0x%02X\n", in->data[0][i]);
+//    }
+
     ps_process_raw(s->ps, (const int16_t *)in->data[0], in->nb_samples, 0, 0);
     have_speech = ps_get_in_speech(s->ps);
     if (have_speech && !s->utt_started)
@@ -76,7 +82,8 @@ static int filter_frame(AVFilterLink *inlink, AVFrame *in)
         ps_end_utt(s->ps);
         speech = ps_get_hyp(s->ps, NULL);
         if (speech != NULL)
-            av_dict_set(metadata, "lavfi.asr.text", speech, 0);
+//            av_dict_set(metadata, "lavfi.asr.text", speech, 0);
+            av_log(NULL, AV_LOG_INFO | AV_LOG_C(134), "%s\n", speech);
         ps_start_utt(s->ps);
         s->utt_started = 0;
     }
@@ -143,6 +150,17 @@ static int query_formats(AVFilterContext *ctx)
 static av_cold void asr_uninit(AVFilterContext *ctx)
 {
     ASRContext *s = ctx->priv;
+
+    if (s->utt_started)
+    {
+        ps_end_utt(s->ps);
+        const char* speech = ps_get_hyp(s->ps, NULL);
+        if (speech != NULL)
+        {
+            av_log(NULL, AV_LOG_INFO | AV_LOG_C(134), "%s\n", speech);
+        }
+        s->utt_started = 0;
+    }
 
     ps_free(s->ps);
     s->ps = NULL;
